@@ -1,0 +1,565 @@
+-- null values
+-- like, in, between 
+-- group by, having
+-- count, avg, sum -- 
+
+-- Sum (salary)
+
+
+
+
+INSERT INTO employee --( EMPLOYEEID, EMPLOYEENAME, MANAGERNAME,SALARY, departmentid) -- DML, data manipulation language
+VALUES (152,'Ezhil12','NULL',10000,1,'01/20/1987');
+
+select MANAGERNAME from employee
+where employeeid = 1
+union all -- union is distinct records, union all is non unique values
+select MANAGERNAME from employee
+where employeeid = 2
+
+-- vinoth123
+select * from employee
+where EMPLOYEENAME like 'v%noth%'
+
+select EMPLOYEEID from employee where MANAGERNAME = 'NULL'
+union all
+select JOININGDATE from employee where JOININGDATE is null
+
+
+1,2 3, 4,5
+
+select * from employee
+where EMPLOYEEID not in (1,2,3,4,5)
+
+select * from employee
+where EMPLOYEEID in (1,2,3,4,5)
+
+100 - 150 
+
+select * from employee
+where employeename in ('ezhil','balaji')
+
+select * from employee
+where employeeid between 110 and 100
+
+select * from employee
+where employeeid between 100 and 110
+
+select * from employee
+where joiningdate between '01/01/2019' and '12/31/2019'
+
+select DEPARTMENTID, COUNT(SALARY) as totalnumberofemployees from employee
+group by DEPARTMENTID;
+
+select DEPARTMENTID, SUM(SALARY) as totalsalary from employee
+group by DEPARTMENTID;
+
+select DEPARTMENTID, avg(SALARY) as averagesalary from employee
+group by DEPARTMENTID;
+
+select DEPARTMENTID, min(SALARY) as minimumsalary from employee
+group by DEPARTMENTID;
+
+select DEPARTMENTID, max(SALARY) as maximumsalary from employee
+group by DEPARTMENTID;
+
+select DEPARTMENTID, avg(SALARY) as averagesalary ,max(SALARY) as maximumsalary ,min(SALARY) as minimumsalary  , SUM(SALARY) as totalsalary from employee
+group by DEPARTMENTID;
+
+select count(JOININGDATE) from employee
+where EMPLOYEEID = 151
+group by employeeid
+
+select DEPARTMENTID, sum(SALARY) as maximumsalary from employee
+group by DEPARTMENTID
+having sum(salary) > 500000;
+
+select * from employee;
+
+select * from DEPARTMENT;
+
+select employeename, departmentname 
+from employee as emp inner join DEPARTMENT as dept
+	on emp.departmentid = dept.departmentid
+where EMPLOYEEID = 1
+;
+
+select DEPARTMENTID, departmentname from DEPARTMENT
+where departmentid = 1;
+=========================================================================================
+-- Joins 
+-- sub queries
+-- inner join
+-- left outer join or left join
+-- right outer join or right join
+-- full outer join or full join.
+-- cross join or cartesian join
+
+
+Find the name of the employee who joined in 2018 and salary greater than 35000
+Find the first and last joiner
+Find the employee name who got the highest salary
+Find the emploees who are all joined in the month of october
+FInd the departments which has more than four employees
+
+
+
+
+
+
+
+select * from employee;
+
+
+select * from DEPARTMENT;
+
+select employeename, departmentname 
+from employee as emp left outer join DEPARTMENT as dept
+	on emp.departmentid = dept.departmentid
+where EMPLOYEEID = 153
+;
+
+select employeename, departmentname 
+from employee as emp right outer join DEPARTMENT as dept
+	on emp.departmentid = dept.departmentid
+--where EMPLOYEEID = 153
+;
+
+select employeename, departmentname 
+from employee as emp full outer join DEPARTMENT as dept
+	on emp.departmentid = dept.departmentid
+--where EMPLOYEEID = 153
+;
+
+
+
+INSERT INTO employee -- DML, data manipulation language
+VALUES (153,'PRAVEEN','Sekar',10000,13,'1/20/2019');
+
+SELECT * FROM employee
+WHERE DEPARTMENTID IN (SELECT DEPARTMENTID FROM DEPARTMENT WHERE departmentname = 'BANKING');
+
+
+SELECT * FROM employee EMP
+WHERE EXISTS (SELECT NULL FROM DEPARTMENT DEPT 
+WHERE EMP.DEPARTMENTID = DEPT.departmentid
+AND departmentname = 'BANKING');
+
+
+insert into DEPARTMENT
+values
+(12,'Azure')
+
+
+select distinct departmentname from department dept inner join employee emp
+on dept.departmentid = emp.DEPARTMENTID
+where salary> 30000;
+
+--1. I want   list   of   department   name   who  has  manager   name   is   subash
+--2. I want which department average salary between 30000 to 35000
+--3. I want list of employees whose phone number starts with 944
+--4. Which department has more experienced employee
+--5. list the senior person in each department -- pending
+--5. List all the manager name whose employee id between 20 to 50
+--6. Find the name of the employee who joined in 2018 and salary greater than 35000
+--7. Find the first and last joiner
+--8. Find the employee name who got the highest salary
+--9. Find the emploees who are all joined in the month of october
+--10. Find the departments which has more than three employees
+
+--1. I want list of department name who has manager name as Subash
+select distinct dept.departmentname , emp.managername from employee emp
+inner join DEPARTMENT dept on emp.DEPARTMENTID = dept.DEPARTMENTID
+where MANAGERNAME = 'subash';
+
+--2. I want which department average salary between 30000 to 35000
+
+select dept.departmentname , avg(salary) from employee emp
+inner join DEPARTMENT dept on emp.DEPARTMENTID = dept.DEPARTMENTID
+--where salary between 30000 and 35000
+group by dept.departmentname
+having avg(salary) between 30000 and 35000
+
+
+--3. I want list of employees whose phone number starts with 944
+
+select * from employee
+where salary like '1%'
+
+--4. Which department has most experienced employee
+
+--5. list the senior person in each department -- pending
+
+select  dept.departmentname, emp.departmentid from employee emp
+inner join department dept on emp.DEPARTMENTID = dept.departmentid
+where (convert(int,getdate())- convert(int,convert (datetime,joiningdate))) =
+(select max(convert(int,getdate())- convert(int,convert (datetime,joiningdate)))from employee emp) 
+
+
+select   
+					max(convert(int,getdate())- convert(int,convert (datetime,joiningdate))) maximum_experience from employee 
+
+select employee.*, convert(int,getdate())- convert(int,convert (datetime,joiningdate)) experience from employee
+order by convert(int,getdate())- convert(int,convert (datetime,joiningdate)) asc
+
+--select convert (1,2)-- syntax
+select convert(varchar,getdate()) --convert date to varchar
+select convert(int,getdate())--convert date to int
+
+--01/01/1900 -- 2019-01-02 number of days 43465
+
+select convert(int,getdate()) -- how many days passed after 1/1/1900
+
+1..50 -- convert(int,getdate())
+
+1..45 -- convert (datetime,joiningdate))
+
+
+select convert(int,convert (datetime,joiningdate)) from employee -- how may days passed after 1/1/1900 till their joining date
+
+select convert(int,convert (datetime,joiningdate)) , joiningdate from employee
+
+select convert (datetime,joiningdate) from employee
+
+--5. List all the manager name whose employee id between 20 to 50
+select distinct managername from employee
+where EMPLOYEEID between 20 and 50
+
+
+--6. Find the name of the employee who joined in 2018 and salary greater than 35000
+select employeename, joiningdate from employee 
+where year(joiningdate) = '2018'
+and salary>35000
+
+
+select * from (select employeename, joiningdate ,salary , year(joiningdate) as joiningyear from employee ) emp1
+where joiningyear = '2018'
+and salary>35000
+
+
+--7. Find the first and last joiner
+
+select * from employee 
+where convert(int,getdate())- convert(int,convert (datetime,joiningdate)) in (
+select max(convert(int,getdate())- convert(int,convert (datetime,joiningdate))) most_experience from employee emp
+union
+select min(convert(int,getdate())- convert(int,convert (datetime,joiningdate))) least_experience from employee emp)
+
+santhosh
+ezhil
+
+santhosh ezhil
+
+select 
+(select employeeid from employee where 
+
+where
+
+-- pivoting function
+-- analytical queries
+-- correlated subquery
+
+--8. Find the employee name who got the highest salary
+select * from employee
+where salary = (select max(salary) from employee)
+
+
+
+--9. Find the emploees who are all joined in the month of october
+
+select * from employee
+where month(joiningdate)  = 10
+
+
+--10. Find the departments which has more than three employees
+
+select departmentid,  count(*) from employee
+group by departmentid
+having count(employeeid) >3
+
+1 Find the employees who are all working in same department
+2 Find second highest salary among the employees
+3 Find the employee details who are all getting same salary
+4 Find the employees who are all working in big data
+5 Find the employee details who joined first in department id 2
+
+
+
+create sales table. 
+
+saleid, empployeeid, productid, salequantity,saledate
+1		1			1
+2		1			1
+3		1			1
+4		1			1
+5		1			2
+6		1			3
+7		2			1
+
+how many sales did Big Data department did? Santhosh
+
+
+-list employees who works for department 'python'
+
+select employeename from employee emp inner join DEPARTMENT dept
+on emp.DEPARTMENTID = dept.departmentid
+where departmentname = 'python'
+
+-- correlated sub query
+
+select employeename from employee emp
+where exists (select null from department dept where emp.departmentid = dept.departmentid and departmentname = 'python')
+
+
+==============================================================================
+ Find the highest salary of employee in each department.
+
+select DEPARTMENT.departmentid,max(salary) from employee_new inner join DEPARTMENT
+on employee_new.DEPARTMENTID=DEPARTMENT.departmentid
+group by DEPARTMENT.DEPARTMENTID;
+
+
+Select Departmentname, max(salary) as highsal from employee_new
+inner join Department on (employee_new.DEPARTMENTID=Department.DepartmentID)
+Group by DepartmentName
+
+select * from 
+(select dense_rank() over (order by salary desc) salary_rank, -- second lowest
+dense_rank() over (order by salary asc) salary_rank_asc, emp.* from employee_new emp) emp1
+where salary_rank = 2
+or salary_rank_asc = 2
+
+select * from 
+(
+select dense_rank() over (order by salary desc) highest_salary_rank,-- second highest
+dense_rank() over (order by salary asc) lowest_salary_rank , emp.* from employee_new emp
+) emp1
+where highest_salary_rank = 2
+or lowest_salary_rank = 2;
+
+select case when highest_salary_rank = 2 then 'second_highest_salary' else 'second_lowest_salary' end, emp1.EMPLOYEEID, emp1.EMPLOYEEname, emp1.SALARY from 
+(
+select dense_rank() over (order by salary desc) highest_salary_rank,-- second highest
+dense_rank() over (order by salary asc) lowest_salary_rank , emp.* from employee_new emp
+) emp1
+where highest_salary_rank = 2
+or lowest_salary_rank = 2;
+
+second_lowest_salary	77	yeswanth	11200	5	2017-05-05	9900125487	169
+second_highest_salary	153	Abhisek	100000	11	1987-07-01	100000	214
+
+2. Second highest salary in employee table. 
+3. List all employees who works in department python with above average salary
+
+select * from employee_new inner join  DEPARTMENT on employee_new.DEPARTMENTID=DEPARTMENT.departmentid 
+where departmentname = 'python' 
+and SALARY > (select avg(salary) --, departmentname 
+from employee_new inner join  DEPARTMENT on employee_new.DEPARTMENTID=DEPARTMENT.departmentid
+where departmentname='python'
+group by departmentname) 
+
+
+
+10000 = 29558	python
+
+select avg(salary) , departmentname 
+from employee_new inner join  DEPARTMENT on employee_new.DEPARTMENTID=DEPARTMENT.departmentid
+where departmentname='python'
+group by departmentname
+=================================================================================================================
+- list all employees whos salary is either second highest or second lowest.
+
+select * from 
+(
+select dense_rank() over (order by salary desc) highest_salary_rank,-- second highest
+dense_rank() over (order by salary asc) lowest_salary_rank , emp.* from employee_new emp
+) emp1
+where highest_salary_rank = 2
+or lowest_salary_rank = 2
+
+--expected output
+second_lowest_salary	77	yeswanth 11200	5	2017-05-05	9900125487	169
+second_highest_salary	153	Abhisek	100000	11	1987-07-01	100000	214
+
+--Hint: use case statement to customize your output.
+--case statement example.
+
+select departmentname, 
+case when departmentname IN('java','python','scala') then 'IT IS A PROGRAMMING LANGUAGE' else 'it is not a programming language' end 
+from department
+=======================================================================================================================
+
+Select * from employee_new
+
+---Delete duplicate records from a table.
+
+Select distinct EMPLOYEEID,EMPLOYEENAME from employee_new
+
+----List the highest salary in each department?
+
+Select Departmentname, max(salary) as highest_salary from employee_new
+inner join Department on (employee_new.DEPARTMENTID=Department.DepartmentID)
+Group by DepartmentName
+
+---List the top salaried person in each department.
+
+select * from 
+(select dense_rank() over (order by salary desc) salary_rank, emp.* from employee_new emp) emp1
+where salary_rank <= 3
+
+----List top salesman(who did the most sales) in each department.
+
+Select * from sales
+
+Select employeeid, max(salesquantity) from sales
+inner join emplo
+
+
+
+===================================
+
+11/Jul/19
+
+Filter conditions:
+
+Where
+
+And
+
+Or
+
+Filter predicates
+
+=  (Equals)
+
+Like (Only for alphanumeric)
+
+IN
+
+Not In
+
+Between
+
+> (Greater than)
+
+< (Lesser than)
+
+1.Select all the customers who's city is Berlin
+
+select * from customers
+where city='Berlin'
+
+2. Select all the customers who's country in the following list UK,Mexico,Germany, France
+select * from customers
+where country  in ('UK','Mexico','Germany','France')
+
+3. Select all the customers who are not from Spain
+select * from customers
+where country not in ('Spain')
+
+4. Select customername who's postal code is 'S-958 22'
+
+select * from customers
+where postalcode='S-958 22'
+
+
+5. Select address, customerid, customername whos customer id is between 10-50
+
+select address, customerid, customername from customers
+where customerid between 10 and 50
+
+=============================================================
+13/Jul/19
+
+1)select customer whos name starts with A from country mexico
+
+SELECT * FROM Customers
+where country = 'Mexico'
+And Customername like 'A%'
+
+2. select customer who are from Germany, mexico but not from spain
+
+SELECT * FROM Customers
+where Country In ('Mexico','Germany')
+
+3. select products whos price is more than 50 but name does not start with leter G
+
+Select * from 'products'
+Where price > 50
+and productname not like 'G%'
+
+4. select productID from orderdertails table whos quantity is more than 40 but less than 100
+
+Select * from orderDetails
+where quantity between 41 and 100
+
+5. select all the customers order by customerid in descending order
+
+select * from customers
+order by customerid desc
+
+==========================================================================
+14/7/19
+
+1. select the average product price for category 2 and if the price is above 20
+
+SELECT avg(price) from products
+where categoryid = 2
+and price > 20
+
+
+2. how many products are there in category 2?
+
+Select count(Productname) from products
+where categoryid = 2
+
+
+3. how many product's price is more than 30?
+Select count(Price) from products
+where price > 30
+
+4. average price of product price in category 2 and 3.
+
+select avg(price) from products
+where categoryid = 2
+and categoryid = 3
+
+
+5. sum of all products
+
+select sum(price) from products
+
+6. sum of all products whos price is more then 30?
+select sum(price) from products
+where price > 30
+
+7. avg, sum of all products whos name starts with 'C', category 2 and price less than 50
+
+select sum(price), avg(price) from products
+where productname like 'c%'
+and categoryid = 2
+and price > 30
+
+8. how many products starts with name 'D'
+
+select count(*) from products
+Where Productname like 'D%'
+
+
+9. what is the category name of category 2?
+select categoryname from categories
+where categoryid = 2
+
+
+10. how many customers are from Germany?
+
+select * from customers
+where country = 'Germany'
+
+
+SELECT country, count(*) FROM Customers
+group by country
+
+SELECT country, count(*) FROM Customers
+group by country
+order by count(*) Desc
