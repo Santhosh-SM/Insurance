@@ -2,7 +2,8 @@
 -- like, in, between 
 -- group by, having
 -- count, avg, sum -- 
--- joins over view
+
+-- Sum (salary)
 
 
 
